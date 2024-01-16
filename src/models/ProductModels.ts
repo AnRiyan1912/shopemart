@@ -11,6 +11,7 @@ export interface Product {
 
 export interface Store {
   id: string;
+  image: string;
   noSiup: string;
   storeName: string;
   address: string;

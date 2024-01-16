@@ -36,6 +36,22 @@ export const ModalDetailProduct: React.FC<ModalDetailProductProps> = ({
                     src={detailProduct.imageUrl}
                     alt={detailProduct.productName}
                   />
+                  <div className="flex items-center gap-4 mt-20">
+                    <img
+                      src={detailProduct.store.image}
+                      alt={detailProduct.store.storeName}
+                      className="w-12 h-12 rounded-full"
+                    />
+                    <h6 className="text-black font-normal text-lg">
+                      {detailProduct.store.storeName}
+                      <p className="text-black text-sm">
+                        No hp: {detailProduct.store.phone}
+                      </p>
+                      <p className="text-black text-sm">
+                        Address: {detailProduct.store.address}
+                      </p>
+                    </h6>
+                  </div>
                 </div>
                 <div className="w-1/2">
                   <div>
@@ -67,7 +83,7 @@ export const ModalDetailProduct: React.FC<ModalDetailProductProps> = ({
                         <button
                           className="p-4 rounded-md bg-blue-200 text-white"
                           onClick={() => {
-                            dispacth(addChart(detailProduct))
+                            dispacth(addChart(detailProduct));
                             setOpenModalDetailProduct(false);
                           }}
                         >

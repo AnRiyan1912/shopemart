@@ -1,8 +1,53 @@
-import React from "react";
+import React, { ChangeEvent, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { onLogin } from "../redux/ecommerce/authSlice";
+import { setLoading } from "../redux/ecommerce/loadingSlice";
+import { useNavigate } from "react-router-dom";
+import { Loading } from "../components/loading/Loading";
+import { RootState } from "../redux/store";
 
 export const LoginPage: React.FC = () => {
+  const [userInputLogin, setUserInputLogin] = useState({
+    id: "",
+    username: "",
+    email: "",
+    password: "",
+  });
+
+  const dispatch = useDispatch();
+  const nav = useNavigate();
+  const loadingStatus = useSelector(
+    (state: RootState) => state.loading.loading
+  );
+  const statusLogin = useSelector(
+    (state: RootState) => state.auth.statusLogin.status
+  );
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setUserInputLogin((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+  console.log(statusLogin, "ini status");
+  console.log(loadingStatus, "ini loading");
+
+  const onSubmit = (e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    dispatch(setLoading({ loading: true }));
+    setTimeout(() => {
+      dispatch(onLogin(userInputLogin));
+      dispatch(setLoading({ loading: false }));
+      if (statusLogin) {
+        nav("/");
+      }
+    }, 1000);
+  };
+
   return (
     <>
+      {loadingStatus ? <Loading /> : ""}
+
       <div className="flex h-screen">
         {/* <!-- Left Pane --> */}
         <div className="hidden lg:flex items-center justify-center flex-1 bg-white text-black">
@@ -322,7 +367,7 @@ export const LoginPage: React.FC = () => {
             <div className="mt-4 text-sm text-gray-600 text-center">
               <p>or with email</p>
             </div>
-            <form action="#" method="POST" className="space-y-4">
+            <form className="space-y-4" onSubmit={(e) => onSubmit(e)}>
               {/* <!-- Your form elements go here --> */}
               <div>
                 <label
@@ -332,6 +377,8 @@ export const LoginPage: React.FC = () => {
                   Username
                 </label>
                 <input
+                  onChange={handleInputChange}
+                  value={userInputLogin.username}
                   type="text"
                   id="username"
                   name="username"
@@ -346,6 +393,8 @@ export const LoginPage: React.FC = () => {
                   Email
                 </label>
                 <input
+                  onChange={handleInputChange}
+                  value={userInputLogin.email}
                   type="text"
                   id="email"
                   name="email"
@@ -360,6 +409,8 @@ export const LoginPage: React.FC = () => {
                   Password
                 </label>
                 <input
+                  onChange={handleInputChange}
+                  value={userInputLogin.password}
                   type="password"
                   id="password"
                   name="password"
