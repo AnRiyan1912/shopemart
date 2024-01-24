@@ -11,11 +11,11 @@ export const ProductTopBrandList:React.FC = () => {
               Top brands
             </span>
           </div>
-          <div className="grid grid-cols-3 mt-5" >
-            {arr.map((value) => {
+          <div className="grid grid-cols-3 mt-5">
+            {arr.map((value, index) => {
               return (
                 <>
-                  <ProductTopBrand key={value} />
+                  <ProductTopBrand key={index} />
                 </>
               );
             })}

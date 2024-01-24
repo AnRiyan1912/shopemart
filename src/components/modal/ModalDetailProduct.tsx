@@ -2,8 +2,10 @@ import React from "react";
 import { Dialog, DialogHeader, DialogBody, Button } from "@material-tailwind/react";
 import { PiStarThin } from "react-icons/pi";
 import { Product } from "../../models/ProductModels";
-import { useDispatch } from "react-redux";
-import { addChart } from "../../redux/ecommerce/productSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addChart } from "../../redux/slices/productSlice";
+import { useNavigate } from "react-router-dom";
+import { RootState } from "../../redux/store";
 
 interface ModalDetailProductProps {
   openModalDetailProduct: boolean;
@@ -16,7 +18,19 @@ export const ModalDetailProduct: React.FC<ModalDetailProductProps> = ({
   setOpenModalDetailProduct,
   detailProduct,
 }) => {
-  const dispacth = useDispatch()
+  const dispacth = useDispatch();
+  const user = useSelector((state: RootState) => state.auth.customer);
+  const nav = useNavigate();
+
+  const handleDetailProduct = () => {
+    if (user.id) {
+      dispacth(addChart(detailProduct));
+      setOpenModalDetailProduct(false);
+    }
+    if (user.id == "") {
+      nav("/login");
+    }
+  };
   return (
     <>
       <Dialog
@@ -83,8 +97,7 @@ export const ModalDetailProduct: React.FC<ModalDetailProductProps> = ({
                         <button
                           className="p-4 rounded-md bg-blue-200 text-white"
                           onClick={() => {
-                            dispacth(addChart(detailProduct));
-                            setOpenModalDetailProduct(false);
+                            handleDetailProduct();
                           }}
                         >
                           Masukkan Keranjang

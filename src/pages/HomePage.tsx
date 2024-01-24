@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Navbar } from "../components/ui/Navbar";
 import { ProductList } from "../components/lists/ProductList";
 import { Corousel } from "../components/corousel/Couresel";
@@ -7,12 +7,20 @@ import { ProductTopBrandList } from "../components/lists/ProductTopBrandList";
 import { ModalChart } from "../components/modal/ModalChart";
 import { ModalRedirectLogin } from "../components/modal/ModalRedirectLogin";
 import { ModalDetailProduct } from "../components/modal/ModalDetailProduct";
-import { Product } from "../models/ProductModels";
+import { useDispatch } from "react-redux";
+import { jwtDecode } from "jwt-decode";
+import {
+  getUserAdminById,
+  getUserCustomerById,
+} from "../redux/slices/authSlice";
+import { Footer } from "../components/ui/Footer";
+import { ModalSellProduct } from "../components/modal/ModalSellProduct";
 
 export const HomePage: React.FC = () => {
   const [openModalChart, setModalChart] = useState(false);
   const [openModalLogin, setOpenModalLogin] = useState(false);
   const [openModalDetailProduct, setOpenModalDetailProduct] = useState(false);
+  const [openModalSell, setOpenModalSell] = useState(false);
   const [detailProduct, setDetailProduct] = useState({
     id: "88hhbffhfj",
     productName: "Motor Jadul",
@@ -30,11 +38,25 @@ export const HomePage: React.FC = () => {
       phone: "081321313",
     },
   });
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const token = localStorage.getItem("auth");
+    let dataToken: String = "";
+    if (token) dataToken = jwtDecode(token);
+    if (dataToken.role == "ROLE_CUSTOMER") {
+      dispatch(getUserCustomerById(dataToken.userId));
+    }
+    if (dataToken.role == "ROLE_ADMIN") {
+      dispatch(getUserAdminById(dataToken.userId));
+    }
+  }, []);
   return (
     <>
       <Navbar
         setModalChart={setModalChart}
         setOpenModalLogin={setOpenModalLogin}
+        setOpenModalSell={setOpenModalSell}
       >
         <Corousel />
         <div className="mt-16">
@@ -46,6 +68,7 @@ export const HomePage: React.FC = () => {
           <ProductTopBrandList />
         </div>
       </Navbar>
+      <Footer />
       {/* modal */}
       <ModalChart
         openModalChart={openModalChart}
@@ -61,7 +84,10 @@ export const HomePage: React.FC = () => {
         openModalDetailProduct={openModalDetailProduct}
         setOpenModalDetailProduct={setOpenModalDetailProduct}
         detailProduct={detailProduct}
-
+      />
+      <ModalSellProduct
+        openModalSell={openModalSell}
+        setOpenModalSell={setOpenModalSell}
       />
     </>
   );

@@ -3,18 +3,36 @@ import { ProductCard } from "../cards/ProductCard";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { Product } from "../../models/ProductModels";
+import { useEffect, useState } from "react";
+import { getAllProductPaging } from "../../services/ProductServices";
 
 interface ProductListProps {
   setOpenModalDetailProduct: (value: boolean) => void;
-  setDetailProduct: (value: Product) => void
+  setDetailProduct: (value: Product) => void;
 }
 
 export const ProductList: React.FC<ProductListProps> = ({
   setOpenModalDetailProduct,
   setDetailProduct,
 }) => {
+  const [nameParam, setNameParam] = useState("");
+  const [maxPriceParam, setMaxPriceParam] = useState(0);
+  const [pageParam, setPageParam] = useState(0);
+  const [sizeParam, setSizeParam] = useState(5);
+
   const products = useSelector((state: RootState) => state.products.products);
 
+  const fetchProduct = async () => {
+    const product = await getAllProductPaging(
+      nameParam,
+      maxPriceParam,
+      pageParam,
+      sizeParam
+    );
+  };
+  useEffect(() => {
+    fetchProduct();
+  }, []);
   return (
     <>
       <div className="flex justify-between">
@@ -32,7 +50,6 @@ export const ProductList: React.FC<ProductListProps> = ({
       <div className="grid grid-cols-5 gap-5 mt-5">
         {products.map((product, index) => {
           return (
-            
             <ProductCard
               product={product}
               setDetailProduct={setDetailProduct}

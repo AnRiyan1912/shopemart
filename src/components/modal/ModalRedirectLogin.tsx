@@ -3,15 +3,16 @@ import {
   Button,
   Dialog,
   Card,
-  CardHeader,
   CardBody,
   CardFooter,
   Typography,
-  Input,
-  Checkbox,
 } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 import { IoClose } from "react-icons/io5";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import defaultImgProfile from "../../assets/default-image.jpg";
+import { logout } from "../../redux/slices/authSlice";
 
 interface ModalChartProps {
   openModalLogin: boolean;
@@ -23,6 +24,13 @@ export const ModalRedirectLogin: React.FC<ModalChartProps> = ({
   setOpenModalLogin,
 }) => {
   const nav = useNavigate();
+  const dispatch = useDispatch();
+  const user = useSelector((state: RootState) => state.auth.customer);
+  const handleLogout = () => {
+    dispatch(logout());
+    localStorage.removeItem("auth");
+    nav("/login");
+  };
   return (
     <>
       <Dialog
@@ -41,45 +49,92 @@ export const ModalRedirectLogin: React.FC<ModalChartProps> = ({
             </span>
           </div>
           <CardBody className="flex flex-col gap-4" placeholder={""}>
-            <Typography variant="h4" color="blue-gray" placeholder={""}>
-              Sign In
-            </Typography>
+            <div className="flex justify-center">
+              <img
+                className="w-20 h-20 rounded-full"
+                src={defaultImgProfile}
+                alt=""
+              />
+            </div>
+            <div>
+              <Typography
+                variant="h4"
+                color="blue-gray"
+                placeholder={""}
+                className="flex justify-center"
+              >
+                {user.customerName ? user.customerName : "SignIn"}
+              </Typography>
+              <div className="px-14">
+                <h6>{user.email ? user.email : ""}</h6>
+              </div>
+            </div>
+
             <Typography
               placeholder={""}
               className="mb-3 font-normal"
               variant="paragraph"
               color="gray"
             >
-              You have account? click sign in
+              {user.customerName ? "" : "You have account? click sign in"}
             </Typography>
+            <div>
+              {user.customerName ? (
+                <button
+                  className="bg-blue-300 text-white px-4 py-1 rounded-lg"
+                  onClick={() => nav("/profile")}
+                >
+                  See profile
+                </button>
+              ) : (
+                ""
+              )}
+            </div>
           </CardBody>
           <CardFooter className="pt-0" placeholder={""}>
             <Button
               variant="gradient"
-              onClick={() => nav("/login")}
+              color="blue"
+              onClick={() => {
+                handleLogout();
+              }}
               fullWidth
               placeholder={""}
             >
-              Sign In
+              {user.customerName ? "Logout" : " Sign In"}
             </Button>
             <Typography
               variant="small"
               className="mt-4 flex justify-center"
               placeholder={""}
             >
-              Don&apos;t have an account?
+              {user.customerName ? "" : " Don&apos;t have an account?"}
+
               <Typography
                 placeholder={""}
                 as="a"
-                href="#signup"
+                href=""
                 variant="small"
                 color="blue-gray"
                 className="ml-1 font-bold"
-                onClick={() => nav("/login")}
+                onClick={() => nav("/register/customer")}
               >
-                Sign up
+                {user.customerName ? "" : " Sign up customer"}
               </Typography>
             </Typography>
+            <div className="flex justify-end px-5">
+              <Typography
+                placeholder={""}
+                as="a"
+                href=""
+                variant="small"
+                color="blue-gray"
+                className="ml-1 font-bold"
+                onClick={() => nav("/register/admin")}
+              >
+                {user.customerName ? "" : " Sign up admin"}
+              </Typography>
+            </div>
           </CardFooter>
         </Card>
       </Dialog>

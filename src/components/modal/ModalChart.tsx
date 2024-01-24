@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import {
   Button,
   Dialog,
@@ -8,14 +7,13 @@ import {
 } from "@material-tailwind/react";
 import { IoMdAdd } from "react-icons/io";
 import { FiMinus } from "react-icons/fi";
-import { Product } from "../../models/ProductModels";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import {
   addTotalProductInCart,
   minusTotalProductInCard,
   removeProductInChart,
-} from "../../redux/ecommerce/productSlice";
+} from "../../redux/slices/productSlice";
 
 interface ModalChartProps {
   openModalChart: boolean;
@@ -61,7 +59,12 @@ export const ModalChart: React.FC<ModalChartProps> = ({
                     </div>
                     <div className="flex items-center gap-5">
                       <span className="flex items-center">
-                        <button className="text-black" onClick={()=>dispatch(minusTotalProductInCard(product.product))}>
+                        <button
+                          className="text-black"
+                          onClick={() =>
+                            dispatch(minusTotalProductInCard(product.product))
+                          }
+                        >
                           <FiMinus />
                         </button>
                       </span>

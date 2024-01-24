@@ -131,6 +131,9 @@ export const productSlice = createSlice({
   name: "product",
   initialState,
   reducers: {
+    addProducst: (state, action: PayloadAction<Product>) => {
+      state.products.push(action.payload);
+    },
     getById: (state, action: PayloadAction<ProductId>) => {
       const productId = action.payload.id;
       const foundProduct = state.products.find(
@@ -195,7 +198,7 @@ export const productSlice = createSlice({
 
       if (index !== -1) {
         state.chart?.splice(index, 1);
-        state.total = 0
+        state.total = 0;
       }
     },
   },
@@ -207,5 +210,6 @@ export const {
   removeProductInChart,
   addTotalProductInCart,
   minusTotalProductInCard,
+  addProducst,
 } = productSlice.actions;
 export default productSlice.reducer;
