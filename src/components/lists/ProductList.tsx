@@ -1,10 +1,11 @@
 import { FaAngleRight } from "react-icons/fa6";
 import { ProductCard } from "../cards/ProductCard";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { Product } from "../../models/ProductModels";
 import { useEffect, useState } from "react";
 import { getAllProductPaging } from "../../services/ProductServices";
+import { addProducst } from "../../redux/slices/productSlice";
 
 interface ProductListProps {
   setOpenModalDetailProduct: (value: boolean) => void;
